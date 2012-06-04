@@ -9,7 +9,11 @@ class Resource(object):
         self.__parent__ = parent
 
     def __getitem__(self, key):
-        if not self.__children__:
+        if isinstance(self.__children__, dict):
+            return self.__children__[key](self, key)
+        elif self.__children__ is None:
             raise KeyError
-        return self.__children__(self, key)
+        elif isinstance(self.__children__, object):
+            return self.__children__(self, key)
+        raise KeyError
 
