@@ -1,11 +1,12 @@
 from pyramid.httpexceptions import HTTPNotImplemented
 
+
 class View(object):
     def __init__(self, request):
         self.request = request
         self.op = None
         try:
-            self.op = getattr(request.context,request.method)
+            self.op = getattr(request.context, request.method)
         except AttributeError:
             self.op = None
 
@@ -13,5 +14,3 @@ class View(object):
         if not self.op:
             raise HTTPNotImplemented
         return self.op(self.request)
-
-
