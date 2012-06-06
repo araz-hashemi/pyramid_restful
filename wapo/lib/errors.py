@@ -2,16 +2,16 @@ from json import dumps
 from pyramid.httpexceptions import HTTPError
 from pyramid.request import Response
 
-class RestError(HTTPError):
+class JSONError(HTTPError):
     """
     Error Response
     Implement with:
         # TODO doublecheck import
-        from errors import RestError
-        config.add_view(RestError, context=HTTPError)
+        from errors import JSONError
+        config.add_view(JSONError, context=HTTPError)
     """
     
-    error_status_codes = {
+    _error_status_codes = {
         400:{'message':'Bad Request'},
         401:{'message':'Unauthorized'},
         402:{'message':'Payment Required'},
@@ -49,13 +49,13 @@ class RestError(HTTPError):
     
     # TODO: pass in environ and start_request as in super()__call__()? and use prepare?
     def __call__(self):
-        if self.req.exception.code not in self.error_status_codes:
+        if self.req.exception.code not in self._error_status_codes:
             # TODO: make sure we have adequate handling? or allow a 500?
             #super(RestError,self).__call__(self.req.environ, self.req???)
             raise self.exc
         response_dict = {
             'code':self.exc.code,
-            'message':self.error_status_codes[self.exc.code]['message']
+            'message':self.exc.explanation
         }
         response = Response(dumps(response_dict))
         response.status_int = self.exc.code
