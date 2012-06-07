@@ -46,14 +46,14 @@ class JSONError(HTTPError):
     def __init__(self, exc, req):
         self.exc = exc
         self.req = req
-        super(RestError, self).__init__()
+        super(JSONError, self).__init__()
 
     # TODO: pass in environ and start_request as in super()__call__()?
     #       and use prepare?
     def __call__(self):
         if self.req.exception.code not in self._error_status_codes:
             # TODO: make sure we have adequate handling? or allow a 500?
-            #super(RestError,self).__call__(self.req.environ, self.req???)
+            #super(JSONError,self).__call__(self.req.environ, self.req???)
             raise self.exc
         response_dict = {
             'code': self.exc.code,
