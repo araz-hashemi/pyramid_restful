@@ -57,7 +57,7 @@ class JSONError(HTTPError):
             raise self.exc
         response_dict = {
             'code': self.exc.code,
-            'message': self.exc.explanation
+            'message': self.exc.detail or self.exc.explanation
         }
         response = Response(dumps(response_dict))
         response.status_int = self.exc.code
