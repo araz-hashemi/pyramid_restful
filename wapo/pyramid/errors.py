@@ -9,7 +9,7 @@ class JSONError(HTTPError):
     Implement with:
         # TODO doublecheck import
         from errors import JSONError
-        config.add_view(JSONError, context=HTTPError)
+        config.add_view(JSONError, context=HTTPError, renderer='json')
     """
 
     _error_status_codes = {
@@ -59,6 +59,5 @@ class JSONError(HTTPError):
             'code': self.exc.code,
             'message': self.exc.detail or self.exc.explanation
         }
-        response = Response(dumps(response_dict))
-        response.status_int = self.exc.code
-        return response
+        self.req.response.status_int = self.exc.code
+        return response_dict
