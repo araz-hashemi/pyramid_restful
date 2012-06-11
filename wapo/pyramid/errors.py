@@ -9,7 +9,7 @@ class JSONError(HTTPError):
     Implement with:
         # TODO doublecheck import
         from errors import JSONError
-        config.add_view(JSONError, context=HTTPError)
+        config.add_view(JSONError, context=HTTPError, renderer='json')
     """
 
     _error_status_codes = {
@@ -46,19 +46,18 @@ class JSONError(HTTPError):
     def __init__(self, exc, req):
         self.exc = exc
         self.req = req
-        super(RestError, self).__init__()
+        super(JSONError, self).__init__()
 
     # TODO: pass in environ and start_request as in super()__call__()?
     #       and use prepare?
     def __call__(self):
         if self.req.exception.code not in self._error_status_codes:
             # TODO: make sure we have adequate handling? or allow a 500?
-            #super(RestError,self).__call__(self.req.environ, self.req???)
+            #super(JSONError,self).__call__(self.req.environ, self.req???)
             raise self.exc
         response_dict = {
             'code': self.exc.code,
-            'message': self.exc.explanation
+            'message': self.exc.detail or self.exc.explanation
         }
-        response = Response(dumps(response_dict))
-        response.status_int = self.exc.code
-        return response
+        self.req.response.status_int = self.exc.code
+        return response_dict
