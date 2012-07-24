@@ -1,7 +1,8 @@
 from pyramid.httpexceptions import HTTPNotImplemented
 
 
-class View(object):
+class RestfulView(object):
+
     def __init__(self, request):
         self.request = request
         self.op = None
