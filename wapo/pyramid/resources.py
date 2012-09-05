@@ -1,3 +1,4 @@
+from pyramid.httpexceptions import HTTPNotImplemented
 
 
 class Resource(object):
@@ -16,6 +17,18 @@ class Resource(object):
         elif isinstance(self.__children__, object):
             return self.__children__(self, key)
         raise KeyError
+
+    def GET(self, request):
+        raise HTTPNotImplemented
+
+    def POST(self, request):
+        raise HTTPNotImplemented
+
+    def PUT(self, request):
+        raise HTTPNotImplemented
+
+    def DELETE(self, request):
+        raise HTTPNotImplemented
 
 
 class Element(Resource):
