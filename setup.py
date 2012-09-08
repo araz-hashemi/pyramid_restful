@@ -29,7 +29,7 @@ setup(name='wapo-pyramid',
       include_package_data=True,
       zip_safe=False,
       install_requires=[
-        "pyramid==1.3.2"
+        "pyramid >= 1.3.2"
       ],
       entry_points="""
       # -*- Entry points: -*-
