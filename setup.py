@@ -11,7 +11,7 @@ here = os.path.abspath(os.path.dirname(__file__))
 README = open(os.path.join(here, 'README.md')).read()
 CHANGES = open(os.path.join(here, 'CHANGES.md')).read()
 
-version = '0.1.0'
+version='0.1.1'
 
 setup(name='wapo-pyramid',
       version=version,
@@ -29,7 +29,7 @@ setup(name='wapo-pyramid',
       include_package_data=True,
       zip_safe=False,
       install_requires=[
-        "pyramid==1.3.2"
+        "pyramid >= 1.3.2"
       ],
       entry_points="""
       # -*- Entry points: -*-
