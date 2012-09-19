@@ -1,4 +1,4 @@
-"""Class to transform vanilla HTTP exceptions into JSON dictionaries.
+"""Class to handle transformations of HTTP exceptions into JSON dictionaries.
 
 Copyright 2012 WaPo Labs
 
@@ -16,14 +16,12 @@ of HTTP exceptions.
 
 """
 
-from json import dumps
-
 from pyramid.httpexceptions import HTTPError
-from pyramid.request import Response
+from pyramid.httpexceptions import HTTPRedirection
 
 
-class JSONError(HTTPError):
-    """Class to transform vanilla HTTP exceptions into JSON dictionaries.
+class JSONError(HTTPError, HTTPRedirection):
+    """Class to transform vanilla Pyramid HTTP exceptions into JSON dicts.
 
     This class transforms vanilla HTTP exceptions thrown by Pyramid into JSON
     dictionaries that include information on the exceptions, such as a status
@@ -40,20 +38,17 @@ class JSONError(HTTPError):
     """
 
     def __init__(self, exception, request):
-        self.exc = exception
-        self.request = request
+        self._exception = exception
+        self._request = request
 
         super(JSONError, self).__init__()
 
     def __call__(self):
-        if not isinstance(self.request.exception, HTTPError):
-            raise self.exc
-
-        self.request.response.status_int = self.exc.code
+        self._request.response.status_int = self._exception.code
 
         response_dict = {
-            'code': self.exc.code,
-            'message': self.exc.detail or self.exc.explanation
+            'code': self._exception.code,
+            'message': self._exception.detail or self._exception.explanation,
             }
 
         return response_dict
