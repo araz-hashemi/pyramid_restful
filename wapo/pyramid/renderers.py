@@ -1,17 +1,9 @@
-import logging
-
 try:
     import simplejson as json
 except ImportError:
     import json
 
 from pyramid.renderers import JSONP as JSONPBase
-
-
-log = logging.getLogger(__name__)
-
-def printlog(msg):
-    log.debug('\n[0;34m%s[0m' % repr(msg))
 
 
 class JSONP(JSONPBase):
@@ -24,8 +16,6 @@ class JSONP(JSONPBase):
             default = self._make_default(request)
             val = self.serializer(value, default=default, **self.kw)
             callback = request.GET.get(self.param_name)
-
-            printlog(value)
 
             if callback is None:
                 ct = 'application/json'
