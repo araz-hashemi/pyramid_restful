@@ -7,6 +7,8 @@ from pyramid.renderers import JSONP as JSONPBase
 
 
 class JSONP(JSONPBase):
+    """Wrap jsonp responses with parameterized callback.
+    """
 
     def __call__(self, info):
         def _render(value, system):
@@ -16,6 +18,7 @@ class JSONP(JSONPBase):
             if request.response.status_int == 200:
                 value['status'] = {'code': 200, 'message': 'OK'}
             else:
+                # the error class renders the code/message here
                 value = {'status': value}
 
             default = self._make_default(request)
