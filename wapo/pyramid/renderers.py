@@ -13,6 +13,11 @@ class JSONP(JSONPBase):
             request = system['request']
             context = system['context']
 
+            if request.response.status_int == 200:
+                value['status'] = {'code': 200, 'message': 'OK'}
+            else:
+                value = {'status': value}
+
             default = self._make_default(request)
             val = self.serializer(value, default=default, **self.kw)
             callback = request.GET.get(self.param_name)
@@ -21,24 +26,9 @@ class JSONP(JSONPBase):
                 ct = 'application/json'
                 body = val
             else:
-
-                # --- Begin Trove API customizations ---
-
-                val_obj = json.loads(val)
-                if request.response.status_int == 200:
-                    val_obj = {
-                        'status': {'code': 200, 'message': 'OK'},
-                        'value': val_obj,
-                        }
-                else:
-                    val_obj = {'status': val_obj}
-                val = json.dumps(val_obj)
-                request.response.status_int = 200
-
-                # --- End Trove API customizations ---
-
                 ct = 'application/javascript'
                 body = '%s(%s)' % (callback, val)
+                request.response.status_int = 200
             response = request.response
             if response.content_type == response.default_content_type:
                 response.content_type = ct
