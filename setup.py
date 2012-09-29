@@ -11,7 +11,7 @@ here = os.path.abspath(os.path.dirname(__file__))
 README = open(os.path.join(here, 'README.md')).read()
 CHANGES = open(os.path.join(here, 'CHANGES.md')).read()
 
-version='0.2.0'
+version='0.2.1'
 
 setup(name='wapo-pyramid',
       version=version,
