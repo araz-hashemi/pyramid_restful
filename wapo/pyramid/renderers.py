@@ -13,7 +13,6 @@ class JSONP(JSONPBase):
     def __call__(self, info):
         def _render(value, system):
             request = system['request']
-            context = system['context']
 
             if request.response.status_int == 200:
                 value['status'] = {'code': 200, 'message': 'OK'}
@@ -21,8 +20,7 @@ class JSONP(JSONPBase):
                 # the error class renders the code/message here
                 value = {'status': value}
 
-            default = self._make_default(request)
-            val = self.serializer(value, default=default, **self.kw)
+            val = json.dumps(value)
             callback = request.GET.get(self.param_name)
 
             if callback is None:
