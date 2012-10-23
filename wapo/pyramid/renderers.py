@@ -14,6 +14,15 @@ class JSONP(JSONPBase):
         def _render(value, system):
             request = system['request']
 
+            # Here we forcibly set the HTTP response status code to 200
+            # regardless of the actual response code, which will be returned
+            # in the 'status' field of the JSON dictionary that is returned.
+            # For a comprehensive explanation of why we do this, see the
+            # Guardian's article on their JSONP API design:
+            #
+            # http://www.guardian.co.uk/info/developer-blog/2012/jul/16/
+            # http-status-codes-jsonp
+            #
             if request.response.status_int == 200:
                 value['status'] = {'code': 200, 'message': 'OK'}
             else:
