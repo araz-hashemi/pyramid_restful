@@ -16,11 +16,16 @@ of HTTP exceptions.
 
 """
 
+import logging
+
 from pyramid.httpexceptions import HTTPError
+from pyramid.httpexceptions import HTTPException
 from pyramid.httpexceptions import HTTPRedirection
 
+log = logging.getLogger(__name__)
 
-class JSONError(HTTPError, HTTPRedirection):
+
+class JSONError(HTTPError, HTTPRedirection, Exception):
     """Class to transform vanilla Pyramid HTTP exceptions into JSON dicts.
 
     This class transforms vanilla HTTP exceptions thrown by Pyramid into JSON
@@ -44,11 +49,20 @@ class JSONError(HTTPError, HTTPRedirection):
         super(JSONError, self).__init__()
 
     def __call__(self):
-        self._request.response.status_int = self._exception.code
+        code = 500
+        message = 'Internal Server Error'
+
+        if isinstance(self._exception, HTTPException):
+            code = self._exception.code
+            message = self._exception.detail or self._exception.explanation
+        else:
+            log.exception(self._exception)
+
+        self._request.response.status_int = code
 
         response_dict = {
-            'code': self._exception.code,
-            'message': self._exception.detail or self._exception.explanation,
-            }
+            'code': code,
+            'message': message,
+        }
 
         return response_dict
