@@ -30,6 +30,8 @@ class Resource(object):
     def DELETE(self, request):
         raise HTTPNotImplemented
 
+    def PATCH(self, request):
+        raise HTTPNotImplemented
 
 class Element(Resource):
     """Represents an individual resource.
