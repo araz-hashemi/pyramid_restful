@@ -23,6 +23,8 @@ class JSONP(JSONPBase):
             # http://www.guardian.co.uk/info/developer-blog/2012/jul/16/
             # http-status-codes-jsonp
             #
+            if not value:
+                value = {}
             if request.response.status_int == 200:
                 value['status'] = {'code': 200, 'message': 'OK'}
             else:
