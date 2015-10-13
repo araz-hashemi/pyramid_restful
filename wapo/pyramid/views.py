@@ -3,6 +3,7 @@ import logging
 from pyramid.httpexceptions import HTTPException
 from pyramid.httpexceptions import HTTPInternalServerError
 from pyramid.httpexceptions import HTTPNotImplemented
+from pyramid.httpexceptions import HTTPSeeOther
 
 log = logging.getLogger(__name__)
 
@@ -55,5 +56,8 @@ class JSONErrorView(object):
             'code': self._exception.code,
             'message': self._exception.detail or self._exception.explanation,
         }
+
+        if self._exception.code == HTTPSeeOther.code:
+            response_dict['location'] = self._exception.location
 
         return response_dict
